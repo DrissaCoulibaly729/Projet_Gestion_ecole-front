@@ -4,7 +4,7 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 import { RouterModule } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 
-import { AuthService } from '../../../core/auth/services/auth.service';
+import { AuthService } from '../../../core/services/auth.service';
 import { LoadingService } from '../../../core/services/loading.service';
 import { LoginRequest } from 'src/app/core/models';
 

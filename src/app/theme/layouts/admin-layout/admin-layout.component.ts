@@ -1,58 +1,108 @@
-import { Component, OnInit } from '@angular/core';
+// Angular import
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { Subject, takeUntil } from 'rxjs';
+
+// Project import
+import { NavBarComponent } from './nav-bar/nav-bar.component';
 import { NavigationComponent } from './navigation/navigation.component';
-import { HeaderComponent } from '../../shared/components/header/header.component';
+import { BreadcrumbComponent } from 'src/app/theme/shared/components/breadcrumb/breadcrumb.component';
+
+// ✅ AJOUTER : Auth imports
 import { AuthService } from '../../../core/services/auth.service';
+import { User } from '../../../core/models';
 
 @Component({
-  selector: 'app-admin-layout',
-  standalone: true,
-  imports: [CommonModule, RouterModule, NavigationComponent, HeaderComponent],
-  template: `
-    <div class="pc-container">
-      <div class="pc-sidebar">
-        <app-navigation></app-navigation>
-      </div>
-
-      <div class="pc-header-overlay"></div>
-      <app-header></app-header>
-
-      <div class="pc-main-content">
-        <router-outlet></router-outlet>
-      </div>
-    </div>
-  `,
-  styles: [`
-    .pc-container {
-      display: flex;
-      min-height: 100vh;
-    }
-
-    .pc-main-content {
-      flex: 1;
-      margin-left: 270px;
-      padding-top: 60px;
-      transition: margin-left 0.3s ease;
-    }
-
-    @media (max-width: 991.98px) {
-      .pc-main-content {
-        margin-left: 0;
-      }
-    }
-  `]
+  selector: 'app-admin',
+  imports: [CommonModule, BreadcrumbComponent, NavigationComponent, NavBarComponent, RouterModule],
+  templateUrl: './admin-layout.component.html',
+  styleUrls: ['./admin-layout.component.scss']
 })
-export class AdminLayoutComponent implements OnInit {
+export class AdminLayoutComponent implements OnInit, OnDestroy {
+  // ✅ AJOUTER : Propriétés d'authentification
+  currentUser: User | null = null;
+  private destroy$ = new Subject<void>();
   
+  // public props (existantes)
+  navCollapsed: boolean;
+  navCollapsedMob: boolean;
+
+  // ✅ AJOUTER : Injection AuthService
   constructor(private authService: AuthService) {}
 
+  // ✅ AJOUTER : Méthodes lifecycle
   ngOnInit(): void {
-    console.log('🎨 Mantis AdminLayout - Chargement du layout');
+    console.log('🎨 Mantis AdminLayoutComponent - Chargement du vrai layout');
     
-    // Vérifier que l'utilisateur est bien connecté
-    this.authService.currentUser$.subscribe(user => {
-      console.log('🎨 Mantis AdminLayout - Utilisateur:', user?.role);
+    // Récupérer l'utilisateur connecté
+    this.authService.currentUser$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(user => {
+        this.currentUser = user;
+        console.log('🎨 Mantis AdminLayoutComponent - Utilisateur:', user?.role);
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  // ✅ AJOUTER : Méthode de déconnexion
+  logout(): void {
+    this.authService.logout().subscribe({
+      next: () => {
+        console.log('🎨 Mantis - Déconnexion réussie');
+      },
+      error: (error) => {
+        console.error('❌ Erreur lors de la déconnexion:', error);
+        this.authService.quickLogout();
+      }
     });
+  }
+
+  // public method (existantes)
+  navMobClick() {
+    if (this.navCollapsedMob && !document.querySelector('app-navigation.pc-sidebar')?.classList.contains('mob-open')) {
+      this.navCollapsedMob = !this.navCollapsedMob;
+      setTimeout(() => {
+        this.navCollapsedMob = !this.navCollapsedMob;
+      }, 100);
+    } else {
+      this.navCollapsedMob = !this.navCollapsedMob;
+    }
+    if (document.querySelector('app-navigation.pc-sidebar')?.classList.contains('navbar-collapsed')) {
+      document.querySelector('app-navigation.pc-sidebar')?.classList.remove('navbar-collapsed');
+    }
+  }
+
+  handleKeyDown(event: KeyboardEvent): void {
+    if (event.key === 'Escape') {
+      this.closeMenu();
+    }
+  }
+
+  closeMenu() {
+    if (document.querySelector('app-navigation.pc-sidebar')?.classList.contains('mob-open')) {
+      document.querySelector('app-navigation.pc-sidebar')?.classList.remove('mob-open');
+    }
+  }
+
+  // ✅ AJOUTER : Méthodes utilitaires
+  getRoleDisplay(role: string): string {
+    switch (role) {
+      case 'administrateur': return 'Administrateur';
+      case 'enseignant': return 'Enseignant';
+      case 'eleve': return 'Élève';
+      default: return role;
+    }
+  }
+
+  getUserInitials(): string {
+    if (!this.currentUser) return '??';
+    const firstInitial = this.currentUser.prenom?.charAt(0)?.toUpperCase() || '';
+    const lastInitial = this.currentUser.nom?.charAt(0)?.toUpperCase() || '';
+    return `${firstInitial}${lastInitial}`;
   }
 }
