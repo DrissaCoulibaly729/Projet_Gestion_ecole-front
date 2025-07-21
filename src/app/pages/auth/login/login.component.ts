@@ -4,6 +4,7 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { LoginRequest } from 'src/app/core/auth/models/auth.model';
+import { filter, take } from 'rxjs';
 
 
 @Component({
@@ -166,7 +167,7 @@ export class LoginComponent implements OnInit {
     }
   }
 
- onSubmit(): void {
+onSubmit(): void {
   if (this.loginForm.valid && !this.loading) {
     this.loading = true;
     this.errorMessage = '';
@@ -177,9 +178,11 @@ export class LoginComponent implements OnInit {
       mot_de_passe: this.loginForm.get('mot_de_passe')?.value
     };
 
+    console.log('🎨 Mantis - Tentative de connexion...');
+
     this.authService.login(credentials).subscribe({
       next: (response) => {
-        this.loading = false;  // ✅ Important : stopper le loading du formulaire
+        console.log('🎨 Mantis - Réponse reçue:', response.statut);
         
         if (response.statut === 'succes') {
           this.successMessage = 'Connexion réussie ! Redirection...';
@@ -188,64 +191,93 @@ export class LoginComponent implements OnInit {
           const token = response.token;
           
           if (user && token) {
-            console.log('🎨 Mantis - Données reçues:', user.role);
+            console.log('🎨 Mantis - Données utilisateur reçues:', user.role);
 
-            // ✅ MISE À JOUR AUTHSERVICE
+            // ✅ SOLUTION PRINCIPALE : Définir les données d'auth
             this.authService.setAuthData(token, user);
             
-            // ✅ FORCER LA FIN DU LOADING GLOBAL
-            this.forceFinishGlobalLoading();
+            // ✅ SOLUTION OBSERVABLE : Attendre que l'état soit mis à jour
+            console.log('🎨 Mantis - Attente de la mise à jour de l\'état...');
             
-            // ✅ DÉLAI PLUS LONG POUR LAISSER LE LOADING SE TERMINER
-            setTimeout(() => {
-              console.log('🎨 Mantis - Tentative navigation après loading...');
-              
-              switch (user.role) {
-                case 'administrateur':
-                  console.log('🎨 Mantis Admin - Redirection vers /admin/dashboard');
-                  this.router.navigate(['/admin/dashboard']).then(success => {
-                    console.log('🎨 Mantis Admin - Résultat navigation:', success);
-                    if (!success) {
-                      console.log('🎨 Mantis - Essai redirection alternative...');
-                      this.router.navigate(['/admin']);
-                    }
-                  });
-                  break;
-                case 'enseignant':
-                  this.router.navigate(['/enseignant/dashboard']);
-                  break;
-                case 'eleve':
-                  this.router.navigate(['/eleve/bulletins']);
-                  break;
+            this.authService.isAuthenticated$.pipe(
+              filter(isAuth => isAuth === true), // Attendre que isAuthenticated soit true
+              take(1) // Prendre la première valeur true
+            ).subscribe({
+              next: (isAuthenticated) => {
+                console.log('🎨 Mantis - État authentification confirmé:', isAuthenticated);
+                console.log('🎨 Mantis - Utilisateur actuel:', this.authService.currentUser?.role);
+                
+                // ✅ Maintenant on peut naviguer en toute sécurité
+                this.navigateByRole(user.role);
+              },
+              error: (error) => {
+                console.error('❌ Erreur lors de l\'attente de l\'état:', error);
+                this.loading = false;
+                this.errorMessage = 'Erreur lors de la mise à jour de l\'état';
               }
-            }, 1500); // ✅ DÉLAI PLUS LONG
+            });
+
+          } else {
+            console.error('❌ Mantis - Données utilisateur ou token manquants');
+            this.loading = false;
+            this.errorMessage = 'Erreur dans les données de connexion';
           }
+        } else {
+          this.loading = false;
+          this.errorMessage = response.message || 'Erreur de connexion';
         }
       },
       error: (error) => {
+        console.error('❌ Mantis - Erreur login:', error);
         this.loading = false;
-        this.errorMessage = 'Erreur de connexion';
+        this.errorMessage = 'Erreur de connexion. Vérifiez vos identifiants.';
       }
     });
   }
 }
 
-private forceFinishGlobalLoading(): void {
-  console.log('🎨 Mantis - Forçage fin du loading global...');
+private navigateByRole(role: string): void {
+  let targetRoute: string;
   
-  // Si vous avez accès à un service de loading global
-  // this.loadingService.setLoading(false);
-  
-  // Ou forcer via l'AppComponent si accessible
-  try {
-    const appComponent = document.querySelector('app-root');
-    if (appComponent) {
-      // Déclencher un événement personnalisé pour forcer la fin du loading
-      window.dispatchEvent(new CustomEvent('forceFinishLoading'));
-    }
-  } catch (error) {
-    console.log('🎨 Mantis - Impossible de forcer la fin du loading global');
+  switch (role) {
+    case 'administrateur':
+      targetRoute = '/admin/dashboard';
+      break;
+    case 'enseignant':
+      targetRoute = '/enseignant/dashboard';
+      break;
+    case 'eleve':
+      targetRoute = '/eleve/bulletins';
+      break;
+    default:
+      console.error('❌ Rôle non reconnu:', role);
+      this.loading = false;
+      this.errorMessage = 'Rôle utilisateur non reconnu';
+      return;
   }
+
+  console.log(`🎨 Mantis - Navigation vers ${targetRoute} pour le rôle: ${role}`);
+  
+  // ✅ AMÉLIORATION : Petit délai avant navigation pour s'assurer que tout est prêt
+  setTimeout(() => {
+    this.router.navigate([targetRoute]).then(success => {
+      console.log(`🎨 Mantis - Résultat navigation vers ${targetRoute}:`, success);
+      
+      if (success) {
+        console.log('✅ Navigation réussie');
+        this.loading = false;
+      } else {
+        console.error('❌ Échec de la navigation - Retry avec window.location');
+        
+        // ✅ FALLBACK : Utiliser window.location en dernier recours
+        window.location.href = targetRoute;
+      }
+    }).catch(error => {
+      console.error('❌ Erreur navigation:', error);
+      console.log('🔄 Fallback vers window.location...');
+      window.location.href = targetRoute;
+    });
+  }, 100); // Petit délai pour laisser les guards se mettre à jour
 }
 
 
