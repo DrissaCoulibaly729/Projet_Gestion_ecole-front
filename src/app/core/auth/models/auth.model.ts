@@ -45,3 +45,9 @@ export interface ChangePasswordRequest {
   nouveau_mot_de_passe_confirmation: string;
 }
 
+export interface AuthState {
+  user: User | null;
+  token: string | null;
+  isAuthenticated: boolean;
+  isLoading: boolean;
+}

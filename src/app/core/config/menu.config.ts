@@ -6,6 +6,7 @@ export interface MenuItem {
   url?: string;
   classes?: string;
   breadcrumbs?: boolean;
+  roles?: string[];  // ✅ ASSUREZ-VOUS QUE CETTE LIGNE EXISTE
   children?: MenuItem[];
 }
 
