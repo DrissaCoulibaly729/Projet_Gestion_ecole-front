@@ -6,7 +6,8 @@ import { Subject, takeUntil } from 'rxjs';
 
 import { AuthService } from '../../../core/auth/services/auth.service';
 import { LoadingService } from '../../../core/services/loading.service';
-import { LoginRequest } from '../../../core/models';
+import { LoginRequest } from 'src/app/core/models';
+
 
 @Component({
   selector: 'app-login',
