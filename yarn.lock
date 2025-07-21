@@ -5352,10 +5352,10 @@ ng-apexcharts@1.16.0:
   dependencies:
     tslib "^2.8.1"
 
-ngx-scrollbar@17.0.0:
-  version "17.0.0"
-  resolved "https://registry.yarnpkg.com/ngx-scrollbar/-/ngx-scrollbar-17.0.0.tgz#d1cd5fcea015ad503e05fd630840a5ea52755729"
-  integrity sha512-WTHD0YHqFRZDqIoQIsB9VR9rocQCDFe1Jc8IHShPBkxO2UNh8BxoyLS3n4vymgF5q9mDg2V2MG778o8QpZLtGQ==
+ngx-scrollbar@16.0.0:
+  version "16.0.0"
+  resolved "https://registry.yarnpkg.com/ngx-scrollbar/-/ngx-scrollbar-16.0.0.tgz#276c267720c1aeda139723e9370a4514ae29215c"
+  integrity sha512-2saos6hjkkka0CuJhWNgyD5upsv4d+APwQTavy738MdD3eEhH7oSviXylM0S8caOWFvjScU9N1exexTofXZITw==
   dependencies:
     tslib "^2.3.0"
 

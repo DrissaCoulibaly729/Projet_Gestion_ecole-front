@@ -14,6 +14,7 @@ import { AuthService } from '../../../core/services/auth.service';
 import { User } from '../../../core/models';
 
 @Component({
+  standalone: true,
   selector: 'app-admin',
   imports: [CommonModule, BreadcrumbComponent, NavigationComponent, NavBarComponent, RouterModule],
   templateUrl: './admin-layout.component.html',

@@ -9,6 +9,7 @@ import { IconService, IconDirective } from '@ant-design/icons-angular';
 import { MenuUnfoldOutline, MenuFoldOutline, SearchOutline } from '@ant-design/icons-angular/icons';
 
 @Component({
+  standalone: true,
   selector: 'app-nav-left',
   imports: [IconDirective, CommonModule],
   templateUrl: './nav-left.component.html',

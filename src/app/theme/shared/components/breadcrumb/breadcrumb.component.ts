@@ -23,6 +23,7 @@ interface titleType {
 }
 
 @Component({
+  standalone: true,
   selector: 'app-breadcrumb',
   imports: [CommonModule, RouterModule],
   templateUrl: './breadcrumb.component.html',

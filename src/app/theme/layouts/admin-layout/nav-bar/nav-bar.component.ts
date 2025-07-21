@@ -7,6 +7,7 @@ import { NavLeftComponent } from './nav-left/nav-left.component';
 import { NavRightComponent } from './nav-right/nav-right.component';
 
 @Component({
+  standalone: true,
   selector: 'app-nav-bar',
   imports: [NavLeftComponent, NavRightComponent],
   templateUrl: './nav-bar.component.html',
