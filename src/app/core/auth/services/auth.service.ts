@@ -251,7 +251,7 @@ export class AuthService {
   /**
    * Définir les données d'authentification
    */
-  private setAuthData(user: User, token: string): void {
+  public setAuthData(user: User, token: string): void {
     localStorage.setItem(this.TOKEN_KEY, token);
     localStorage.setItem(this.USER_KEY, JSON.stringify(user));
     

@@ -186,14 +186,22 @@ private redirectAfterLogin(): void {
   }
 
   // Méthodes privées
-  private setAuthData(token: string, user: User): void {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem(this.TOKEN_KEY, token);
-      localStorage.setItem(this.USER_KEY, JSON.stringify(user));
-    }
-    this.currentUserSubject.next(user);
-    this.isAuthenticatedSubject.next(true);
+public setAuthData(token: string, user: User): void {
+  console.log('🎨 AuthService - setAuthData appelé pour:', user.role);
+  
+  if (typeof window !== 'undefined') {
+    localStorage.setItem(this.TOKEN_KEY, token);
+    localStorage.setItem(this.USER_KEY, JSON.stringify(user));
+    console.log('🎨 AuthService - Données sauvegardées dans localStorage');
   }
+  
+  this.currentUserSubject.next(user);
+  this.isAuthenticatedSubject.next(true);
+  
+  console.log('🎨 AuthService - État mis à jour');
+  console.log('🎨 AuthService - currentUser:', this.currentUserSubject.value?.role);
+  console.log('🎨 AuthService - isAuthenticated:', this.isAuthenticatedSubject.value);
+}
 
   private setUser(user: User): void {
     if (typeof window !== 'undefined') {
