@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../../../core/services/auth.service';
-import { User } from '../../../../core/models/auth.model';
+
 import { MenuItem, menuItems } from '../../../../core/config/menu.config';
+import { User } from 'src/app/core/auth/models/auth.model';
 
 @Component({
   selector: 'app-navigation',

@@ -1,15 +1,13 @@
-// src/app/app-routing.module.ts
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-// Layouts (CORRECTION : AdminLayoutComponent au lieu d'AdminComponent)
+// Layouts - UTILISER VOS COMPOSANTS EXISTANTS
 import { AdminLayoutComponent } from './theme/layouts/admin-layout/admin-layout.component';
 import { GuestLayoutComponent } from './theme/layouts/guest-layout/guest-layout.component';
 
-// Guards (CORRECTION : Chemins corrects)
+// Guards - UTILISER VOS GUARDS EXISTANTS
 import { AuthGuard } from './core/auth/guards/auth.guard';
 import { GuestGuard } from './core/auth/guards/guest.guard';
-import { AdminGuard } from './core/auth/guards/admin.guard';
 
 const routes: Routes = [
   // Routes d'authentification
@@ -30,11 +28,12 @@ const routes: Routes = [
     ]
   },
 
-  // Routes Admin - CORRIGÉ
+  // Routes Admin
   {
     path: 'admin',
-    component: AdminLayoutComponent, // ✅ Nom correct
-    canActivate: [AdminGuard],
+    component: AdminLayoutComponent,
+    canActivate: [AuthGuard],
+    data: { role: 'administrateur' },
     children: [
       {
         path: '',
@@ -44,22 +43,42 @@ const routes: Routes = [
       {
         path: 'dashboard',
         loadComponent: () => import('./pages/admin/dashboard/admin-dashboard.component').then(c => c.AdminDashboardComponent)
-      },
-      // ... autres routes
+      }
     ]
   },
 
-  // Routes d'erreur
+  // Routes temporaires d'erreur (sans fichiers externes)
   {
     path: 'unauthorized',
-    loadComponent: () => import('./pages/errors/unauthorized/unauthorized.component').then(c => c.UnauthorizedComponent)
+    component: AdminLayoutComponent,
+    canActivate: [AuthGuard],
+    children: [
+      {
+        path: '',
+        loadComponent: () => import('./pages/shared/profile/profile.component').then(c => c.ProfileComponent)
+      }
+    ]
   },
   {
     path: '404',
-    loadComponent: () => import('./pages/errors/not-found/not-found.component').then(c => c.NotFoundComponent)
+    component: GuestLayoutComponent,
+    children: [
+      {
+        path: '',
+        loadComponent: () => import('./pages/auth/login/login.component').then(c => c.LoginComponent)
+      }
+    ]
   },
+
+  // Redirection pour toutes les autres routes
   {
     path: '**',
     redirectTo: '/404'
   }
 ];
+
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
+})
+export class AppRoutingModule {}
