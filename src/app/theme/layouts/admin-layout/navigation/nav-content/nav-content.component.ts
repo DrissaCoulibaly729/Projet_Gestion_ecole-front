@@ -1,15 +1,19 @@
-// Angular import
-import { Component, OnInit, inject, output } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule, Location, LocationStrategy } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { NgScrollbarModule } from 'ngx-scrollbar';
 
-// project import
-import { NavigationItem, NavigationItems } from '../navigation';
-import { environment } from 'src/environments/environment';
+// Navigation
+import { NavigationItem, AdminNavigationItems, TeacherNavigationItems, StudentNavigationItems } from '../navigation';
 
+// Composants
 import { NavGroupComponent } from './nav-group/nav-group.component';
 
-// icon
+// Auth
+import { AuthService } from '../../../../../core/auth/services/auth.service';
+import { UserRole } from '../../../../../core/models/user.model';
+
+// Icones
 import { IconService } from '@ant-design/icons-angular';
 import {
   DashboardOutline,
@@ -22,11 +26,14 @@ import {
   BgColorsOutline,
   AntDesignOutline
 } from '@ant-design/icons-angular/icons';
-import { NgScrollbarModule } from 'ngx-scrollbar';
+
+// Environnement
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-nav-content',
-  imports: [CommonModule, RouterModule, NavGroupComponent, NgScrollbarModule],
+  standalone: true,
+  imports: [CommonModule, RouterModule, NgScrollbarModule, NavGroupComponent],
   templateUrl: './nav-content.component.html',
   styleUrls: ['./nav-content.component.scss']
 })
@@ -34,21 +41,18 @@ export class NavContentComponent implements OnInit {
   private location = inject(Location);
   private locationStrategy = inject(LocationStrategy);
   private iconService = inject(IconService);
+  private authService = inject(AuthService);
 
-  // public props
-  NavCollapsedMob = output();
+  navigations: NavigationItem[] = [];
 
-  navigations: NavigationItem[];
-
-  // version
+  // Version
   title = 'Demo application for version numbering';
   currentApplicationVersion = environment.appVersion;
 
-  navigation = NavigationItems;
   windowWidth = window.innerWidth;
 
-  // Constructor
   constructor() {
+    // Chargement des icônes
     this.iconService.addIcon(
       ...[
         DashboardOutline,
@@ -62,13 +66,32 @@ export class NavContentComponent implements OnInit {
         QuestionOutline
       ]
     );
-    this.navigations = NavigationItems;
   }
 
-  // Life cycle events
-  ngOnInit() {
+  ngOnInit(): void {
+    // Adapter le menu sur petit écran
     if (this.windowWidth < 1025) {
-      (document.querySelector('.coded-navbar') as HTMLDivElement).classList.add('menupos-static');
+      (document.querySelector('.coded-navbar') as HTMLDivElement)?.classList.add('menupos-static');
+    }
+
+    // Navigation dynamique selon le rôle
+    this.authService.currentUser$.subscribe(user => {
+      if (user) {
+        this.navigations = this.getNavigationByRole(user.role);
+      }
+    });
+  }
+
+  private getNavigationByRole(role: UserRole): NavigationItem[] {
+    switch (role) {
+      case 'administrateur':
+        return AdminNavigationItems;
+      case 'enseignant':
+        return TeacherNavigationItems;
+      case 'eleve':
+        return StudentNavigationItems;
+      default:
+        return AdminNavigationItems;
     }
   }
 
@@ -85,21 +108,19 @@ export class NavContentComponent implements OnInit {
       const up_parent = parent?.parentElement?.parentElement;
       const last_parent = up_parent?.parentElement;
       if (parent?.classList.contains('coded-hasmenu')) {
-        parent.classList.add('coded-trigger');
-        parent.classList.add('active');
+        parent.classList.add('coded-trigger', 'active');
       } else if (up_parent?.classList.contains('coded-hasmenu')) {
-        up_parent.classList.add('coded-trigger');
-        up_parent.classList.add('active');
+        up_parent.classList.add('coded-trigger', 'active');
       } else if (last_parent?.classList.contains('coded-hasmenu')) {
-        last_parent.classList.add('coded-trigger');
-        last_parent.classList.add('active');
+        last_parent.classList.add('coded-trigger', 'active');
       }
     }
   }
 
   navMob() {
-    if (this.windowWidth < 1025 && document.querySelector('app-navigation.coded-navbar').classList.contains('mob-open')) {
-      this.NavCollapsedMob.emit();
+    const navbar = document.querySelector('app-navigation.coded-navbar');
+    if (this.windowWidth < 1025 && navbar?.classList.contains('mob-open')) {
+      // Ajouter ici un EventEmitter si nécessaire
     }
   }
 }

@@ -16,113 +16,181 @@ export interface NavigationItem {
   link?: string;
   description?: string;
   path?: string;
+  roles?: string[]; // Ajout pour la gestion des rôles
 }
 
-export const NavigationItems: NavigationItem[] = [
+// Navigation pour Administrateur
+export const AdminNavigationItems: NavigationItem[] = [
   {
     id: 'dashboard',
-    title: 'Dashboard',
+    title: 'Tableau de bord',
     type: 'group',
     icon: 'icon-navigation',
     children: [
       {
-        id: 'default',
-        title: 'Default',
+        id: 'admin-dashboard',
+        title: 'Vue d\'ensemble',
         type: 'item',
         classes: 'nav-item',
-        url: '/dashboard/default',
+        url: '/admin/dashboard',
         icon: 'dashboard',
         breadcrumbs: false
       }
     ]
   },
   {
-    id: 'authentication',
-    title: 'Authentication',
+    id: 'user-management',
+    title: 'Gestion des Utilisateurs',
     type: 'group',
     icon: 'icon-navigation',
     children: [
       {
-        id: 'login',
-        title: 'Login',
-        type: 'item',
+        id: 'users',
+        title: 'Utilisateurs',
+        type: 'collapse',
         classes: 'nav-item',
-        url: '/login',
-        icon: 'login',
-        target: true,
-        breadcrumbs: false
-      },
-      {
-        id: 'register',
-        title: 'Register',
-        type: 'item',
-        classes: 'nav-item',
-        url: '/register',
-        icon: 'profile',
-        target: true,
-        breadcrumbs: false
+        icon: 'team',
+        children: [
+          {
+            id: 'users-list',
+            title: 'Liste des utilisateurs',
+            type: 'item',
+            url: '/admin/users',
+            classes: 'nav-item'
+          },
+          {
+            id: 'create-teacher',
+            title: 'Nouvel enseignant',
+            type: 'item',
+            url: '/admin/users/create/teacher',
+            classes: 'nav-item'
+          },
+          {
+            id: 'create-student',
+            title: 'Nouvel élève',
+            type: 'item',
+            url: '/admin/users/create/student',
+            classes: 'nav-item'
+          }
+        ]
       }
     ]
   },
   {
-    id: 'utilities',
-    title: 'UI Components',
+    id: 'academic-management',
+    title: 'Gestion Académique',
     type: 'group',
     icon: 'icon-navigation',
     children: [
       {
-        id: 'typography',
-        title: 'Typography',
+        id: 'classes',
+        title: 'Classes',
         type: 'item',
         classes: 'nav-item',
-        url: '/typography',
-        icon: 'font-size'
+        url: '/admin/classes',
+        icon: 'home',
       },
       {
-        id: 'color',
-        title: 'Colors',
+        id: 'subjects',
+        title: 'Matières',
         type: 'item',
         classes: 'nav-item',
-        url: '/color',
-        icon: 'bg-colors'
-      },
-      {
-        id: 'ant-icons',
-        title: 'Ant Icons',
-        type: 'item',
-        classes: 'nav-item',
-        url: 'https://ant.design/components/icon',
-        icon: 'ant-design',
-        target: true,
-        external: true
-      }
-    ]
-  },
-
-  {
-    id: 'other',
-    title: 'Other',
-    type: 'group',
-    icon: 'icon-navigation',
-    children: [
-      {
-        id: 'sample-page',
-        title: 'Sample Page',
-        type: 'item',
-        url: '/sample-page',
-        classes: 'nav-item',
-        icon: 'chrome'
-      },
-      {
-        id: 'document',
-        title: 'Document',
-        type: 'item',
-        classes: 'nav-item',
-        url: 'https://codedthemes.gitbook.io/mantis-angular/',
-        icon: 'question',
-        target: true,
-        external: true
+        url: '/admin/subjects',
+        icon: 'book',
       }
     ]
   }
 ];
+
+// Navigation pour Enseignant
+export const TeacherNavigationItems: NavigationItem[] = [
+  {
+    id: 'dashboard',
+    title: 'Tableau de bord',
+    type: 'group',
+    icon: 'icon-navigation',
+    children: [
+      {
+        id: 'teacher-dashboard',
+        title: 'Vue d\'ensemble',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/teacher/dashboard',
+        icon: 'dashboard',
+        breadcrumbs: false
+      }
+    ]
+  },
+  {
+    id: 'teaching',
+    title: 'Enseignement',
+    type: 'group',
+    icon: 'icon-navigation',
+    children: [
+      {
+        id: 'my-classes',
+        title: 'Mes Classes',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/teacher/classes',
+        icon: 'team',
+      },
+      {
+        id: 'grades',
+        title: 'Saisie Notes',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/teacher/grades',
+        icon: 'edit',
+      }
+    ]
+  }
+];
+
+// Navigation pour Élève
+export const StudentNavigationItems: NavigationItem[] = [
+  {
+    id: 'dashboard',
+    title: 'Accueil',
+    type: 'group',
+    icon: 'icon-navigation',
+    children: [
+      {
+        id: 'student-dashboard',
+        title: 'Mon espace',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/student/dashboard',
+        icon: 'home',
+        breadcrumbs: false
+      }
+    ]
+  },
+  {
+    id: 'studies',
+    title: 'Mes Études',
+    type: 'group',
+    icon: 'icon-navigation',
+    children: [
+      {
+        id: 'my-grades',
+        title: 'Mes Notes',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/student/grades',
+        icon: 'bar-chart',
+      },
+      {
+        id: 'bulletins',
+        title: 'Bulletins',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/student/bulletins',
+        icon: 'file-pdf',
+      }
+    ]
+  }
+];
+
+// Navigation par défaut (on garde l'existante pour la compatibilité)
+export const NavigationItems: NavigationItem[] = AdminNavigationItems;
