@@ -4,7 +4,7 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { LoginRequest } from 'src/app/core/auth/models/auth.model';
-import { filter, take } from 'rxjs';
+import { delay, filter, switchMap, take } from 'rxjs';
 
 
 @Component({
@@ -167,6 +167,8 @@ export class LoginComponent implements OnInit {
     }
   }
 
+
+
 onSubmit(): void {
   if (this.loginForm.valid && !this.loading) {
     this.loading = true;
@@ -193,27 +195,29 @@ onSubmit(): void {
           if (user && token) {
             console.log('🎨 Mantis - Données utilisateur reçues:', user.role);
 
-            // ✅ SOLUTION PRINCIPALE : Définir les données d'auth
+            // ✅ SOLUTION SIMPLE : Utiliser setAuthData existant
             this.authService.setAuthData(token, user);
             
-            // ✅ SOLUTION OBSERVABLE : Attendre que l'état soit mis à jour
-            console.log('🎨 Mantis - Attente de la mise à jour de l\'état...');
+            // ✅ MAIS empêcher la redirection automatique et gérer manuellement
+            console.log('🎨 Mantis - Attente état stable...');
             
+            // Attendre que l'état soit propagé PUIS naviguer
             this.authService.isAuthenticated$.pipe(
-              filter(isAuth => isAuth === true), // Attendre que isAuthenticated soit true
-              take(1) // Prendre la première valeur true
+              filter(isAuth => isAuth === true), // Attendre que l'auth soit true
+              take(1), // Une seule fois
+              delay(100) // Petit délai de sécurité
             ).subscribe({
-              next: (isAuthenticated) => {
-                console.log('🎨 Mantis - État authentification confirmé:', isAuthenticated);
-                console.log('🎨 Mantis - Utilisateur actuel:', this.authService.currentUser?.role);
+              next: () => {
+                console.log('🎨 Mantis - État authentification stable');
+                console.log('🎨 Mantis - Vérification finale:', this.authService.isAuthenticated);
                 
-                // ✅ Maintenant on peut naviguer en toute sécurité
+                // Maintenant naviguer
                 this.navigateByRole(user.role);
               },
               error: (error) => {
-                console.error('❌ Erreur lors de l\'attente de l\'état:', error);
+                console.error('❌ Erreur attente état:', error);
                 this.loading = false;
-                this.errorMessage = 'Erreur lors de la mise à jour de l\'état';
+                this.errorMessage = 'Erreur de synchronisation';
               }
             });
 
@@ -236,6 +240,8 @@ onSubmit(): void {
   }
 }
 
+
+
 private navigateByRole(role: string): void {
   let targetRoute: string;
   
@@ -256,28 +262,17 @@ private navigateByRole(role: string): void {
       return;
   }
 
-  console.log(`🎨 Mantis - Navigation vers ${targetRoute} pour le rôle: ${role}`);
+  console.log(`🎨 Mantis - Navigation simple vers ${targetRoute}`);
   
-  // ✅ AMÉLIORATION : Petit délai avant navigation pour s'assurer que tout est prêt
-  setTimeout(() => {
-    this.router.navigate([targetRoute]).then(success => {
-      console.log(`🎨 Mantis - Résultat navigation vers ${targetRoute}:`, success);
-      
-      if (success) {
-        console.log('✅ Navigation réussie');
-        this.loading = false;
-      } else {
-        console.error('❌ Échec de la navigation - Retry avec window.location');
-        
-        // ✅ FALLBACK : Utiliser window.location en dernier recours
-        window.location.href = targetRoute;
-      }
-    }).catch(error => {
-      console.error('❌ Erreur navigation:', error);
-      console.log('🔄 Fallback vers window.location...');
+  this.router.navigate([targetRoute]).then(success => {
+    console.log(`🎨 Mantis - Navigation result:`, success);
+    this.loading = false;
+    
+    if (!success) {
+      console.log('🔄 Fallback navigation...');
       window.location.href = targetRoute;
-    });
-  }, 100); // Petit délai pour laisser les guards se mettre à jour
+    }
+  });
 }
 
 

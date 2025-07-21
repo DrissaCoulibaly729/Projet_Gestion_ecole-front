@@ -116,6 +116,10 @@ export class AuthService {
     return this.isAuthenticatedSubject.value;
   }
 
+  get currentUser(): User | null {
+    return this.currentUserSubject.value;
+  }
+
   /**
    * Vérifier si l'utilisateur a un rôle spécifique
    */
@@ -235,4 +239,8 @@ public setAuthData(token: string, user: User): void {
     }
     return false;
   }
+
+   
+
+ 
 }
