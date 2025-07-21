@@ -3,7 +3,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
-import { map, catchError, tap } from 'rxjs/operators';
+import { map, catchError, tap, take } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
 import { 
@@ -228,17 +228,18 @@ export class AuthService {
         
         // Vérifier la validité du token
         this.verifyToken().subscribe({
-          next: (isValid) => {
-            if (!isValid) {
-              this.clearAuthData();
-            }
-            this.setLoading(false);
-          },
-          error: () => {
-            this.clearAuthData();
-            this.setLoading(false);
-          }
-        });
+  next: (isValid) => {
+    if (!isValid) {
+      this.clearAuthData();
+    }
+    this.setLoading(false); // <- fait APRES la redirection potentielle
+  },
+  error: () => {
+    this.clearAuthData();
+    this.setLoading(false);
+  }
+});
+
       } catch {
         this.clearAuthData();
         this.setLoading(false);
@@ -247,6 +248,14 @@ export class AuthService {
       this.setLoading(false);
     }
   }
+
+  isReady(): Observable<boolean> {
+  return this.authState$.asObservable().pipe(
+    map(state => !state.isLoading),
+    take(1)
+  );
+}
+
 
   /**
    * Définir les données d'authentification

@@ -179,7 +179,7 @@ export class LoginComponent implements OnInit {
 
     this.authService.login(credentials).subscribe({
       next: (response) => {
-        this.loading = false;
+        this.loading = false;  // ✅ Important : stopper le loading du formulaire
         
         if (response.statut === 'succes') {
           this.successMessage = 'Connexion réussie ! Redirection...';
@@ -190,19 +190,25 @@ export class LoginComponent implements OnInit {
           if (user && token) {
             console.log('🎨 Mantis - Données reçues:', user.role);
 
-            // ✅ SOLUTION 1: FORCER LA MISE À JOUR DE L'AUTHSERVICE
+            // ✅ MISE À JOUR AUTHSERVICE
             this.authService.setAuthData(token, user);
             
-            // ✅ ATTENDRE QUE L'ÉTAT SOIT MIS À JOUR AVANT DE REDIRIGER
+            // ✅ FORCER LA FIN DU LOADING GLOBAL
+            this.forceFinishGlobalLoading();
+            
+            // ✅ DÉLAI PLUS LONG POUR LAISSER LE LOADING SE TERMINER
             setTimeout(() => {
-              console.log('🎨 Mantis - Vérification état auth:', this.authService.isAuthenticated());
-              console.log('🎨 Mantis - Utilisateur actuel:', this.authService.getCurrentUser()?.role);
+              console.log('🎨 Mantis - Tentative navigation après loading...');
               
               switch (user.role) {
                 case 'administrateur':
                   console.log('🎨 Mantis Admin - Redirection vers /admin/dashboard');
                   this.router.navigate(['/admin/dashboard']).then(success => {
                     console.log('🎨 Mantis Admin - Résultat navigation:', success);
+                    if (!success) {
+                      console.log('🎨 Mantis - Essai redirection alternative...');
+                      this.router.navigate(['/admin']);
+                    }
                   });
                   break;
                 case 'enseignant':
@@ -212,8 +218,7 @@ export class LoginComponent implements OnInit {
                   this.router.navigate(['/eleve/bulletins']);
                   break;
               }
-            }, 100); // Petit délai pour que l'état soit mis à jour
-
+            }, 1500); // ✅ DÉLAI PLUS LONG
           }
         }
       },
@@ -222,6 +227,24 @@ export class LoginComponent implements OnInit {
         this.errorMessage = 'Erreur de connexion';
       }
     });
+  }
+}
+
+private forceFinishGlobalLoading(): void {
+  console.log('🎨 Mantis - Forçage fin du loading global...');
+  
+  // Si vous avez accès à un service de loading global
+  // this.loadingService.setLoading(false);
+  
+  // Ou forcer via l'AppComponent si accessible
+  try {
+    const appComponent = document.querySelector('app-root');
+    if (appComponent) {
+      // Déclencher un événement personnalisé pour forcer la fin du loading
+      window.dispatchEvent(new CustomEvent('forceFinishLoading'));
+    }
+  } catch (error) {
+    console.log('🎨 Mantis - Impossible de forcer la fin du loading global');
   }
 }
 
