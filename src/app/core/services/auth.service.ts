@@ -10,7 +10,7 @@ import {
   User, 
   ChangePasswordRequest, 
   ApiResponse 
-} from '../models/auth.model';
+} from '../models/';
 
 @Injectable({
   providedIn: 'root'

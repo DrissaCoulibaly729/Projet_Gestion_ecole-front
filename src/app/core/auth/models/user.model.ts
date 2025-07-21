@@ -1,4 +1,5 @@
-import { PaginationParams, User } from "./auth.model";
+import { PaginationParams } from "../../models";
+import {  User } from "./auth.model";
 
 export interface UserFilters extends PaginationParams {
   role?: 'enseignant' | 'eleve' | 'administrateur';

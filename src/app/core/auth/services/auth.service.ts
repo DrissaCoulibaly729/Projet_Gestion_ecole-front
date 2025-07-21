@@ -1,6 +1,4 @@
-// ==========================================
-// src/app/core/auth/services/auth.service.ts
-// ==========================================
+
 
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -9,15 +7,15 @@ import { map, catchError, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
 import { 
- 
+ ApiResponse,
   LoginRequest, 
   LoginResponse, 
   ChangePasswordRequest,
   AuthState,
-  
-} from '../../models/auth.model';
-import { User, UserRole } from '../../models/user.model';
-import { ApiResponse } from '../../models/api-response.model';
+  User, 
+  UserRole
+} from '../../models';
+
 
 
 @Injectable({

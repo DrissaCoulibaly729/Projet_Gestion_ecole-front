@@ -4,7 +4,8 @@ import { RouterModule } from '@angular/router';
 import { AuthService } from '../../../../core/services/auth.service';
 
 import { MenuItem, menuItems } from '../../../../core/config/menu.config';
-import { User } from 'src/app/core/auth/models/auth.model';
+import { User } from '../../../../core/models';
+
 
 @Component({
   selector: 'app-navigation',

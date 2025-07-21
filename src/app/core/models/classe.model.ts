@@ -1,4 +1,4 @@
-import { PaginationParams, User } from "./auth.model";
+import { PaginationParams, User } from "./";
 
 export interface Classe {
   id: number;

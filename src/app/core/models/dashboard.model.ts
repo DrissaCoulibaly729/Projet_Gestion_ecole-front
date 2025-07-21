@@ -1,4 +1,4 @@
-import { User } from "./auth.model";
+import { User } from "./";
 
 export interface DashboardStats {
   statistiques_utilisateurs: {
