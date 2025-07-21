@@ -1,77 +1,122 @@
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
 
-import { Routes } from '@angular/router';
+// Layouts MANTIS - Structure originale
+import { AdminLayoutComponent } from './theme/layouts/admin-layout/admin-layout.component';
+import { GuestLayoutComponent } from './theme/layouts/guest-layout/guest-layout.component';
 
-import { AuthGuard, AdminGuard, TeacherGuard, StudentGuard, GuestGuard } from './core/auth/guards';
+// Guards
+import { AuthGuard } from './core/auth/guards/auth.guard';
+import { GuestGuard } from './core/auth/guards/guest.guard';
 
-export const routes: Routes = [
+const routes: Routes = [
+  // Routes d'authentification (Guest Layout)
   {
     path: '',
-    redirectTo: '/auth/login',
-    pathMatch: 'full'
-  },
-  
-  // Routes d'authentification - SEULES ROUTES QUI FONCTIONNENT POUR L'INSTANT
-  {
-    path: 'auth',
-    loadComponent: () => import('./layouts/auth-layout/auth-layout.component').then(c => c.AuthLayoutComponent),
+    component: GuestLayoutComponent,
     canActivate: [GuestGuard],
     children: [
       {
-        path: 'login',
-        loadComponent: () => import('./features/auth/login/login.component').then(c => c.LoginComponent)
+        path: '',
+        redirectTo: '/auth/login',
+        pathMatch: 'full'
       },
       {
-        path: '',
-        redirectTo: 'login',
-        pathMatch: 'full'
+        path: 'auth/login',
+        loadComponent: () => import('./pages/auth/login/login.component').then(c => c.LoginComponent)
       }
     ]
   },
-  
-  // Routes administrateur - SIMPLIFIÉ
+
+  // Routes Administrateur (Admin Layout Mantis)
   {
     path: 'admin',
-    loadComponent: () => import('./layouts/admin-layout/admin-layout.component').then(c => c.AdminLayoutComponent),
-    canActivate: [AdminGuard],
-    canActivateChild: [AdminGuard],
+    component: AdminLayoutComponent,  // ✅ Utilise le layout Mantis
+    canActivate: [AuthGuard],
+    data: { role: 'administrateur' },
     children: [
-      {
-        path: 'dashboard',
-        loadComponent: () => import('./features/admin/dashboard/dashboard.component').then(c => c.AdminDashboardComponent)
-      },
       {
         path: '',
         redirectTo: 'dashboard',
         pathMatch: 'full'
+      },
+      {
+        path: 'dashboard',
+        loadComponent: () => import('./pages/admin/dashboard/admin-dashboard.component').then(c => c.AdminDashboardComponent)
+      },
+      {
+        path: 'profil',
+        loadComponent: () => import('./pages/shared/profile/profile.component').then(c => c.ProfileComponent)
+      }
+      // ✅ Ajouterons progressivement : users, classes, matieres
+    ]
+  },
+
+  // Routes Enseignant (Admin Layout Mantis)
+  {
+    path: 'enseignant',
+    component: AdminLayoutComponent,  // ✅ Même layout, navigation différente
+    canActivate: [AuthGuard],
+    data: { role: 'enseignant' },
+    children: [
+      {
+        path: '',
+        redirectTo: 'dashboard',
+        pathMatch: 'full'
+      },
+      {
+        path: 'dashboard',
+        loadComponent: () => import('./pages/admin/dashboard/admin-dashboard.component').then(c => c.AdminDashboardComponent)  // ✅ Temporaire
+      },
+      {
+        path: 'profil',
+        loadComponent: () => import('./pages/shared/profile/profile.component').then(c => c.ProfileComponent)
       }
     ]
   },
 
-  // Routes temporaires pour les autres rôles (redirigent vers admin pour l'instant)
+  // Routes Élève (Admin Layout Mantis)
   {
-    path: 'teacher',
-    redirectTo: '/admin/dashboard',
-    pathMatch: 'full'
-  },
-  {
-    path: 'student',
-    redirectTo: '/admin/dashboard', 
-    pathMatch: 'full'
+    path: 'eleve',
+    component: AdminLayoutComponent,  // ✅ Même layout, navigation différente
+    canActivate: [AuthGuard],
+    data: { role: 'eleve' },
+    children: [
+      {
+        path: '',
+        redirectTo: 'bulletins',
+        pathMatch: 'full'
+      },
+      {
+        path: 'bulletins',
+        loadComponent: () => import('./pages/shared/profile/profile.component').then(c => c.ProfileComponent)  // ✅ Temporaire
+      },
+      {
+        path: 'profil',
+        loadComponent: () => import('./pages/shared/profile/profile.component').then(c => c.ProfileComponent)
+      }
+    ]
   },
 
   // Routes d'erreur
   {
     path: 'unauthorized',
-    loadComponent: () => import('./features/auth/login/login.component').then(c => c.LoginComponent)
+    loadComponent: () => import('./pages/errors/unauthorized/unauthorized.component').then(c => c.UnauthorizedComponent)
   },
   {
     path: '404',
-    loadComponent: () => import('./features/auth/login/login.component').then(c => c.LoginComponent)
+    loadComponent: () => import('./pages/errors/not-found/not-found.component').then(c => c.NotFoundComponent)
   },
-  
+
   // Redirection pour toutes les autres routes
   {
     path: '**',
     redirectTo: '/404'
   }
 ];
+
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
+})
+export class AppRoutingModule {}

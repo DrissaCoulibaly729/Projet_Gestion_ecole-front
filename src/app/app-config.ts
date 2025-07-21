@@ -1,13 +1,23 @@
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
-import { provideRouter } from '@angular/router';
-import { provideHttpClient } from '@angular/common/http';  // ✅ AJOUT
+import { ApplicationConfig, importProvidersFrom } from '@angular/core';
 
-import { routes } from './app.routes';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
+// ✅ IMPORT DU ROUTING MODULE (au lieu de routes directes)
+import { AppRoutingModule } from './app-routing.module';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideZoneChangeDetection({ eventCoalescing: true }),
-    provideRouter(routes),
-    provideHttpClient()  // ✅ AJOUT - Configuration HttpClient
+    // ✅ IMPORTANT: Utiliser importProvidersFrom pour le routing module
+    importProvidersFrom(AppRoutingModule),
+    
+    // ✅ Configuration HTTP
+    provideHttpClient(withInterceptorsFromDi()),
+    
+    // ✅ Animations pour Mantis
+    importProvidersFrom(BrowserAnimationsModule),
+    
+    // ✅ Autres providers si nécessaire
+    // Vos services globaux peuvent être ajoutés ici
   ]
 };

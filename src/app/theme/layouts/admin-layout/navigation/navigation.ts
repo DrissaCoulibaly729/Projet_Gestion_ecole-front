@@ -16,7 +16,7 @@ export interface NavigationItem {
   link?: string;
   description?: string;
   path?: string;
-  roles?: string[]; // Ajout pour la gestion des rôles
+  roles?: string[]; // ✅ IMPORTANT: Propriété pour la gestion des rôles
 }
 
 // Navigation pour Administrateur
@@ -25,7 +25,7 @@ export const AdminNavigationItems: NavigationItem[] = [
     id: 'dashboard',
     title: 'Tableau de bord',
     type: 'group',
-    icon: 'icon-navigation',
+    icon: 'dashboard',
     children: [
       {
         id: 'admin-dashboard',
@@ -34,54 +34,26 @@ export const AdminNavigationItems: NavigationItem[] = [
         classes: 'nav-item',
         url: '/admin/dashboard',
         icon: 'dashboard',
-        breadcrumbs: false
+        breadcrumbs: false,
+        roles: ['administrateur'] // ✅ Visible uniquement pour les admins
       }
     ]
   },
   {
     id: 'user-management',
-    title: 'Gestion des Utilisateurs',
+    title: 'Gestion',
     type: 'group',
-    icon: 'icon-navigation',
+    icon: 'users',
     children: [
       {
         id: 'users',
         title: 'Utilisateurs',
-        type: 'collapse',
+        type: 'item',
         classes: 'nav-item',
-        icon: 'team',
-        children: [
-          {
-            id: 'users-list',
-            title: 'Liste des utilisateurs',
-            type: 'item',
-            url: '/admin/users',
-            classes: 'nav-item'
-          },
-          {
-            id: 'create-teacher',
-            title: 'Nouvel enseignant',
-            type: 'item',
-            url: '/admin/users/create/teacher',
-            classes: 'nav-item'
-          },
-          {
-            id: 'create-student',
-            title: 'Nouvel élève',
-            type: 'item',
-            url: '/admin/users/create/student',
-            classes: 'nav-item'
-          }
-        ]
-      }
-    ]
-  },
-  {
-    id: 'academic-management',
-    title: 'Gestion Académique',
-    type: 'group',
-    icon: 'icon-navigation',
-    children: [
+        url: '/admin/utilisateurs',
+        icon: 'users',
+        roles: ['administrateur']
+      },
       {
         id: 'classes',
         title: 'Classes',
@@ -89,14 +61,16 @@ export const AdminNavigationItems: NavigationItem[] = [
         classes: 'nav-item',
         url: '/admin/classes',
         icon: 'home',
+        roles: ['administrateur']
       },
       {
         id: 'subjects',
         title: 'Matières',
         type: 'item',
         classes: 'nav-item',
-        url: '/admin/subjects',
+        url: '/admin/matieres',
         icon: 'book',
+        roles: ['administrateur']
       }
     ]
   }
@@ -106,18 +80,17 @@ export const AdminNavigationItems: NavigationItem[] = [
 export const TeacherNavigationItems: NavigationItem[] = [
   {
     id: 'dashboard',
-    title: 'Tableau de bord',
+    title: 'Mon espace',
     type: 'group',
-    icon: 'icon-navigation',
+    icon: 'dashboard',
     children: [
       {
         id: 'teacher-dashboard',
-        title: 'Vue d\'ensemble',
+        title: 'Accueil',
         type: 'item',
-        classes: 'nav-item',
-        url: '/teacher/dashboard',
+        url: '/enseignant/dashboard',
         icon: 'dashboard',
-        breadcrumbs: false
+        roles: ['enseignant']
       }
     ]
   },
@@ -125,23 +98,23 @@ export const TeacherNavigationItems: NavigationItem[] = [
     id: 'teaching',
     title: 'Enseignement',
     type: 'group',
-    icon: 'icon-navigation',
+    icon: 'book',
     children: [
       {
         id: 'my-classes',
         title: 'Mes Classes',
         type: 'item',
-        classes: 'nav-item',
-        url: '/teacher/classes',
-        icon: 'team',
+        url: '/enseignant/classes',
+        icon: 'users',
+        roles: ['enseignant']
       },
       {
         id: 'grades',
         title: 'Saisie Notes',
         type: 'item',
-        classes: 'nav-item',
-        url: '/teacher/grades',
+        url: '/enseignant/notes',
         icon: 'edit',
+        roles: ['enseignant']
       }
     ]
   }
@@ -151,18 +124,17 @@ export const TeacherNavigationItems: NavigationItem[] = [
 export const StudentNavigationItems: NavigationItem[] = [
   {
     id: 'dashboard',
-    title: 'Accueil',
+    title: 'Mon espace',
     type: 'group',
-    icon: 'icon-navigation',
+    icon: 'dashboard',
     children: [
       {
         id: 'student-dashboard',
-        title: 'Mon espace',
+        title: 'Accueil',
         type: 'item',
-        classes: 'nav-item',
-        url: '/student/dashboard',
+        url: '/eleve/dashboard',
         icon: 'home',
-        breadcrumbs: false
+        roles: ['eleve']
       }
     ]
   },
@@ -170,27 +142,23 @@ export const StudentNavigationItems: NavigationItem[] = [
     id: 'studies',
     title: 'Mes Études',
     type: 'group',
-    icon: 'icon-navigation',
+    icon: 'book',
     children: [
-      {
-        id: 'my-grades',
-        title: 'Mes Notes',
-        type: 'item',
-        classes: 'nav-item',
-        url: '/student/grades',
-        icon: 'bar-chart',
-      },
       {
         id: 'bulletins',
         title: 'Bulletins',
         type: 'item',
-        classes: 'nav-item',
-        url: '/student/bulletins',
-        icon: 'file-pdf',
+        url: '/eleve/bulletins',
+        icon: 'file-text',
+        roles: ['eleve']
       }
     ]
   }
 ];
 
-// Navigation par défaut (on garde l'existante pour la compatibilité)
-export const NavigationItems: NavigationItem[] = AdminNavigationItems;
+// ✅ EXPORT PRINCIPAL: Navigation dynamique selon le rôle
+export const NavigationItems = [
+  ...AdminNavigationItems,
+  ...TeacherNavigationItems,
+  ...StudentNavigationItems
+];
