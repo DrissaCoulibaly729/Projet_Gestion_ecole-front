@@ -110,17 +110,17 @@ import { LoginRequest } from '../../../core/models/auth.model';
                 <div class="row">
                   <div class="col-md-4">
                     <strong>Admin:</strong><br>
-                    <small>admin@school.com</small><br>
+                    <small>admin&#64;school.com</small><br>
                     <small>password</small>
                   </div>
                   <div class="col-md-4">
                     <strong>Enseignant:</strong><br>
-                    <small>prof@school.com</small><br>
+                    <small>prof&#64;school.com</small><br>
                     <small>password</small>
                   </div>
                   <div class="col-md-4">
                     <strong>Élève:</strong><br>
-                    <small>eleve@school.com</small><br>
+                    <small>eleve&#64;school.com</small><br>
                     <small>password</small>
                   </div>
                 </div>

@@ -1,4 +1,5 @@
-import { Classe } from "./classe.model";
+import { Classe } from "../../models/classe.model";
+
 
 export interface LoginRequest {
   login: string;
