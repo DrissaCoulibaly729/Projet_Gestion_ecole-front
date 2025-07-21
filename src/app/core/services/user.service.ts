@@ -8,7 +8,7 @@ import {
   CreateEnseignantRequest, 
   CreateEleveRequest, 
   CreateEleveResponse 
-} from '../models/user.model';
+} from '../models';
 
 @Injectable({
   providedIn: 'root'

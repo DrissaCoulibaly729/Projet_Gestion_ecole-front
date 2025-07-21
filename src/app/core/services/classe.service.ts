@@ -8,7 +8,7 @@ import {
   CreateClasseRequest, 
   ClasseStats 
 } from '../models/classe.model';
-import { User } from '../models/user.model';
+
 
 @Injectable({
   providedIn: 'root'

@@ -5,9 +5,10 @@ import { ApiResponse, PaginatedResponse } from '../models/common.model';
 import { 
   Matiere, 
   MatiereFilters, 
-  CreateMatiereRequest 
-} from '../models/matiere.model';
-import { User } from '../models/user.model';
+  CreateMatiereRequest,
+  User 
+} from '../models';
+
 
 @Injectable({
   providedIn: 'root'

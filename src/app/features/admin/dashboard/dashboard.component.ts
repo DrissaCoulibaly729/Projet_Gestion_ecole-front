@@ -2,8 +2,8 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Subject, takeUntil } from 'rxjs';
 
-import { AdminService } from '../../../core/services/admin.service';
-import { DashboardStats } from '../../../core/models';
+import { AdminService } from '../../../core/services';
+import { DashboardStats } from '../../../core/services';
 // Import du composant Card de Mantis
 import { CardComponent } from '../../../theme/shared/components/card/card.component';
 
