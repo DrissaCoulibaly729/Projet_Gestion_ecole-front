@@ -12,28 +12,28 @@ export class GuestGuard implements CanActivate {
     private router: Router
   ) {}
 
-  canActivate(): boolean {
-    // ✅ CORRECTION : isAuthenticated est un getter, pas une méthode
-    if (this.authService.isAuthenticated) {
-      // ✅ CORRECTION : Redirection manuelle selon le rôle
-      const user = this.authService.currentUser;
-      if (user) {
-        switch (user.role) {
-          case 'administrateur':
-            this.router.navigate(['/admin/dashboard']);
-            break;
-          case 'enseignant':
-            this.router.navigate(['/teacher/dashboard']);
-            break;
-          case 'eleve':
-            this.router.navigate(['/student/dashboard']);
-            break;
-          default:
-            this.router.navigate(['/auth/login']);
-        }
+ canActivate(): boolean {
+  if (this.authService.isAuthenticated) {
+    const user = this.authService.currentUser;
+    if (user) {
+      console.log('🎨 Mantis GuestGuard - Redirection pour:', user.role);
+      
+      switch (user.role) {
+        case 'administrateur':
+          this.router.navigate(['/admin/dashboard']);
+          break;
+        case 'enseignant':
+          this.router.navigate(['/enseignant/dashboard']); // ✅ Route Mantis
+          break;
+        case 'eleve':
+          this.router.navigate(['/eleve/bulletins']); // ✅ Route Mantis
+          break;
+        default:
+          this.router.navigate(['/auth/login']);
       }
-      return false;
     }
-    return true;
+    return false;
   }
+  return true;
+}
 }

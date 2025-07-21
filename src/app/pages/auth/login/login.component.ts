@@ -167,46 +167,147 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit(): void {
-    if (this.loginForm.valid) {
-      this.loading = true;
-      this.errorMessage = '';
-      this.successMessage = '';
+  console.log('🎨 Mantis Login - Début soumission formulaire');
+  
+  if (this.loginForm.valid && !this.loading) {
+    this.loading = true;
+    this.errorMessage = '';
+    this.successMessage = '';
 
-      const credentials: LoginRequest = {
-        login: this.loginForm.get('login')?.value,
-        mot_de_passe: this.loginForm.get('mot_de_passe')?.value
-      };
+    const credentials: LoginRequest = {
+      login: this.loginForm.get('login')?.value,
+      mot_de_passe: this.loginForm.get('mot_de_passe')?.value
+    };
 
-      this.authService.login(credentials).subscribe({
-        next: (response) => {
-          this.loading = false;
-          if (response.statut === 'succes') {
-            this.successMessage = 'Connexion réussie ! Redirection...';
-            
-            setTimeout(() => {
-              this.authService.redirectToDashboard();
-            }, 1000);
-          }
-        },
-        error: (error) => {
-          this.loading = false;
-          console.error('Erreur de connexion:', error);
-          
-          if (error.status === 401) {
-            this.errorMessage = 'Email/identifiant ou mot de passe incorrect.';
-          } else if (error.status === 422) {
-            this.errorMessage = 'Données de connexion invalides.';
-          } else if (error.status === 0) {
-            this.errorMessage = 'Impossible de se connecter au serveur.';
+    console.log('🎨 Mantis Login - Tentative connexion pour:', credentials.login);
+
+    this.authService.login(credentials).subscribe({
+      next: (response) => {
+        console.log('🎨 Mantis Login - Réponse serveur:', response);
+        
+        this.loading = false;
+        
+        if (response.statut === 'succes') {
+          this.successMessage = 'Connexion réussie ! Redirection...';
+          console.log('🎨 Mantis Login - Connexion réussie');
+
+          // Récupérer les données utilisateur de la réponse
+          const user = response.data?.user;
+          if (user) {
+            console.log('🎨 Mantis Login - Utilisateur connecté:', {
+              nom: user.nom,
+              prenom: user.prenom,
+              role: user.role,
+              email: user.email
+            });
+
+            // 🎯 REDIRECTION SPÉCIFIQUE THÈME MANTIS
+            switch (user.role) {
+              case 'administrateur':
+                console.log('🎨 Mantis Admin - Redirection vers /admin/dashboard');
+                this.router.navigate(['/admin/dashboard']).then(success => {
+                  if (success) {
+                    console.log('🎨 Mantis Admin - Navigation réussie');
+                  } else {
+                    console.error('🎨 Mantis Admin - Échec navigation');
+                  }
+                }).catch(error => {
+                  console.error('🎨 Mantis Admin - Erreur navigation:', error);
+                });
+                break;
+
+              case 'enseignant':
+                console.log('🎨 Mantis Enseignant - Redirection vers /enseignant/dashboard');
+                this.router.navigate(['/enseignant/dashboard']).then(success => {
+                  if (success) {
+                    console.log('🎨 Mantis Enseignant - Navigation réussie');
+                  } else {
+                    console.error('🎨 Mantis Enseignant - Échec navigation');
+                  }
+                }).catch(error => {
+                  console.error('🎨 Mantis Enseignant - Erreur navigation:', error);
+                });
+                break;
+
+              case 'eleve':
+                console.log('🎨 Mantis Élève - Redirection vers /eleve/bulletins');
+                this.router.navigate(['/eleve/bulletins']).then(success => {
+                  if (success) {
+                    console.log('🎨 Mantis Élève - Navigation réussie');
+                  } else {
+                    console.error('🎨 Mantis Élève - Échec navigation');
+                  }
+                }).catch(error => {
+                  console.error('🎨 Mantis Élève - Erreur navigation:', error);
+                });
+                break;
+
+              default:
+                console.warn('🎨 Mantis - Rôle non reconnu:', user.role);
+                this.errorMessage = 'Rôle utilisateur non reconnu. Contactez l\'administrateur.';
+                this.router.navigate(['/auth/login']);
+            }
           } else {
-            this.errorMessage = 'Une erreur est survenue. Veuillez réessayer.';
+            console.error('🎨 Mantis Login - Données utilisateur manquantes');
+            this.errorMessage = 'Erreur lors de la récupération des données utilisateur.';
           }
+        } else {
+          console.error('🎨 Mantis Login - Réponse échec:', response);
+          this.errorMessage = response.message || 'Échec de la connexion.';
         }
-      });
-    } else {
+      },
+      
+      error: (error) => {
+        console.error('🎨 Mantis Login - Erreur connexion:', error);
+        
+        this.loading = false;
+        
+        // Gestion détaillée des erreurs
+        if (error.status === 401) {
+          this.errorMessage = 'Email/identifiant ou mot de passe incorrect.';
+          console.log('🎨 Mantis Login - Erreur 401: Identifiants incorrects');
+        } 
+        else if (error.status === 422) {
+          console.log('🎨 Mantis Login - Erreur 422: Validation échouée');
+          
+          if (error.error && error.error.erreurs) {
+            // Erreurs de validation Laravel
+            const validationErrors = Object.values(error.error.erreurs).flat();
+            this.errorMessage = validationErrors.join(', ');
+          } else {
+            this.errorMessage = 'Données de connexion invalides.';
+          }
+        } 
+        else if (error.status === 0) {
+          this.errorMessage = 'Impossible de se connecter au serveur. Vérifiez votre connexion internet.';
+          console.log('🎨 Mantis Login - Erreur 0: Serveur inaccessible');
+        } 
+        else if (error.status === 500) {
+          this.errorMessage = 'Erreur interne du serveur. Veuillez réessayer plus tard.';
+          console.log('🎨 Mantis Login - Erreur 500: Erreur serveur');
+        } 
+        else {
+          this.errorMessage = error.error?.message || 'Une erreur est survenue. Veuillez réessayer.';
+          console.log('🎨 Mantis Login - Erreur autre:', error.status, error.message);
+        }
+      }
+    });
+  } 
+  else {
+    console.log('🎨 Mantis Login - Formulaire invalide ou chargement en cours');
+    
+    if (!this.loginForm.valid) {
+      console.log('🎨 Mantis Login - Erreurs formulaire:', this.loginForm.errors);
       this.markFormGroupTouched();
+      this.errorMessage = 'Veuillez remplir tous les champs requis.';
+    }
+    
+    if (this.loading) {
+      console.log('🎨 Mantis Login - Soumission déjà en cours...');
     }
   }
+}
+
 
   togglePasswordVisibility(): void {
     this.showPassword = !this.showPassword;

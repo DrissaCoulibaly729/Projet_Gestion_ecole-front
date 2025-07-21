@@ -128,26 +128,54 @@ export class AuthService {
    * Rediriger vers le dashboard selon le rôle
    */
   redirectToDashboard(): void {
-    const user = this.getCurrentUser();
-    if (!user) {
-      this.router.navigate(['/auth/login']);
-      return;
-    }
-
-    switch (user.role) {
-      case 'administrateur':
-        this.router.navigate(['/admin/dashboard']);
-        break;
-      case 'enseignant':
-        this.router.navigate(['/enseignant/dashboard']);
-        break;
-      case 'eleve':
-        this.router.navigate(['/eleve/bulletins']);
-        break;
-      default:
-        this.router.navigate(['/auth/login']);
-    }
+  const user = this.getCurrentUser();
+  if (!user) {
+    this.router.navigate(['/auth/login']);
+    return;
   }
+
+  console.log('🎨 Mantis - Redirection pour le rôle:', user.role);
+
+  switch (user.role) {
+    case 'administrateur':
+      console.log('➡️ Redirection Admin Mantis: /admin/dashboard');
+      this.router.navigate(['/admin/dashboard']);
+      break;
+    case 'enseignant':
+      console.log('➡️ Redirection Enseignant Mantis: /enseignant/dashboard');
+      this.router.navigate(['/enseignant/dashboard']); // ✅ Route Mantis
+      break;
+    case 'eleve':
+      console.log('➡️ Redirection Élève Mantis: /eleve/bulletins');
+      this.router.navigate(['/eleve/bulletins']); // ✅ Route Mantis
+      break;
+    default:
+      console.log('❌ Rôle non reconnu:', user.role);
+      this.router.navigate(['/auth/login']);
+  }
+}
+
+private redirectAfterLogin(): void {
+   const user = this.getCurrentUser();
+  const role = user ? user.role : null;
+  let redirectUrl = '/';
+
+  switch (role) {
+    case 'administrateur':
+      redirectUrl = '/admin/dashboard';
+      break;
+    case 'enseignant':
+      redirectUrl = '/enseignant/dashboard'; // ✅ CORRIGER
+      break;
+    case 'eleve':
+      redirectUrl = '/eleve/bulletins'; // ✅ CORRIGER
+      break;
+  }
+
+  console.log('Redirection automatique vers:', redirectUrl); // ✅ Debug
+  this.router.navigate([redirectUrl]);
+}
+
 
   /**
    * Déconnexion rapide (côté client uniquement)

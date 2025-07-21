@@ -48,19 +48,11 @@ export class AdminLayoutComponent implements OnInit {
   constructor(private authService: AuthService) {}
 
   ngOnInit(): void {
-    // Vérifier le token au chargement du layout
-    if (this.authService.isAuthenticated()) {
-      this.authService.verifyToken().subscribe({
-        next: (response) => {
-          if (response.statut !== 'succes') {
-            this.authService.quickLogout();
-          }
-        },
-        error: (error) => {
-          console.error('Token invalide:', error);
-          this.authService.quickLogout();
-        }
-      });
-    }
+    console.log('🎨 Mantis AdminLayout - Chargement du layout');
+    
+    // Vérifier que l'utilisateur est bien connecté
+    this.authService.currentUser$.subscribe(user => {
+      console.log('🎨 Mantis AdminLayout - Utilisateur:', user?.role);
+    });
   }
 }

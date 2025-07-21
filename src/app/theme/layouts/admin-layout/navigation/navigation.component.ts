@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { AuthService } from '../../../../core/services/auth.service';
 
 // ✅ CORRECTION 1: Import correct des types et données
-import { NavigationItem, NavigationItems } from '../navigation/navigation';
+import { AdminNavigationItems, NavigationItem, NavigationItems, StudentNavigationItems, TeacherNavigationItems } from '../navigation/navigation';
 import { User } from '../../../../core/auth/models/auth.model';  // ✅ Chemin correct
 
 @Component({
@@ -157,13 +157,33 @@ export class NavigationComponent implements OnInit {
 
   // ✅ CORRECTION 2: Type de retour correct
   getFilteredMenuItems(): NavigationItem[] {
-    if (!this.currentUser) return [];
-
-    // ✅ CORRECTION 3: Utiliser NavigationItems comme variable, pas comme type
-    return NavigationItems.filter(item => {
-      return this.shouldShowMenuItem(item);
-    });
+  if (!this.currentUser) {
+    console.log('🎨 Mantis Navigation - Aucun utilisateur connecté');
+    return [];
   }
+
+  console.log('🎨 Mantis Navigation - Filtrage pour le rôle:', this.currentUser.role);
+
+  // ✅ IMPORTANT : Utiliser la navigation selon le rôle
+  let menuItems: NavigationItem[] = [];
+  
+  switch (this.currentUser.role) {
+    case 'administrateur':
+      menuItems = AdminNavigationItems;
+      break;
+    case 'enseignant':
+      menuItems = TeacherNavigationItems;
+      break;
+    case 'eleve':
+      menuItems = StudentNavigationItems;
+      break;
+    default:
+      menuItems = [];
+  }
+
+  console.log('🎨 Mantis Navigation - Éléments affichés:', menuItems.length);
+  return menuItems;
+}
 
   // ✅ CORRECTION 4: Méthode pour vérifier l'affichage des éléments
   private shouldShowMenuItem(item: NavigationItem): boolean {

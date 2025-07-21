@@ -33,15 +33,16 @@ export class AdminGuard {
   }
 
   private redirectToAppropriateRoute(role?: string): void {
-    switch (role) {
-      case 'enseignant':
-        this.router.navigate(['/teacher/dashboard']);
-        break;
-      case 'eleve':
-        this.router.navigate(['/student/dashboard']);
-        break;
-      default:
-        this.router.navigate(['/auth/login']);
-    }
+  switch (role) {
+    case 'enseignant':
+      this.router.navigate(['/enseignant/dashboard']); // ✅ CORRIGER
+      break;
+    case 'eleve':
+      this.router.navigate(['/eleve/bulletins']); // ✅ CORRIGER
+      break;
+    default:
+      this.router.navigate(['/auth/login']);
   }
+}
+
 }
