@@ -92,8 +92,8 @@ export class AuthService {
     return this.http.post<LoginResponse>(`${this.API_URL}/auth/connexion`, credentials)
       .pipe(
         tap(response => {
-          if (response.statut === 'succes' && response.data) {
-            this.setAuthData(response.data.user, response.data.token);
+          if (response.statut === 'succes' && response.utilisateur && response.token) {
+            this.setAuthData(response.utilisateur, response.token);
             this.redirectAfterLogin();
           }
         }),

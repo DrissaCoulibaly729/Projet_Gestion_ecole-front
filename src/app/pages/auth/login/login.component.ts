@@ -192,7 +192,8 @@ export class LoginComponent implements OnInit {
           console.log('🎨 Mantis Login - Connexion réussie');
 
           // Récupérer les données utilisateur de la réponse
-          const user = response.data?.user;
+          const user = response.utilisateur;  // ✅ Utilise la vraie structure
+          const token = response.token;  // ✅ Récupère le token
           if (user) {
             console.log('🎨 Mantis Login - Utilisateur connecté:', {
               nom: user.nom,

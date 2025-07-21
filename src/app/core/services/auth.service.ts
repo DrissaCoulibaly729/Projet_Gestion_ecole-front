@@ -37,11 +37,11 @@ export class AuthService {
   login(credentials: LoginRequest): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.API_URL}/auth/connexion`, credentials)
       .pipe(
-        tap(response => {
-          if (response.statut === 'succes' && response.data) {
-            this.setAuthData(response.data.token, response.data.user);
-          }
-        })
+       tap(response => {
+  if (response.statut === 'succes' && response.utilisateur && response.token) {
+    this.setAuthData(response.token, response.utilisateur);
+  }
+})
       );
   }
 

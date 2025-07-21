@@ -9,11 +9,11 @@ export interface LoginRequest {
 export interface LoginResponse {
   message: string;
   statut: 'succes' | 'erreur';
-  data: {
-    token: string;
-    user: User;
-  };
+  utilisateur: User;    // ✅ "utilisateur" au lieu de "data.user"
+  token: string;        // ✅ "token" direct au lieu de "data.token"  
+  type_token: string;   // ✅ "Bearer"
 }
+
 
 export interface User {
   id: number;
@@ -21,17 +21,17 @@ export interface User {
   prenom: string;
   email: string;
   role: 'administrateur' | 'enseignant' | 'eleve';
-  actif: boolean;
-  created_at: string;
-  updated_at: string;
-  // Champs spécifiques selon le rôle
+  identifiant_genere?: string | null;  // ✅ Ajouté selon votre réponse API
+  // Autres champs optionnels selon vos besoins
+  actif?: boolean;
+  created_at?: string;
+  updated_at?: string;
   telephone?: string;
   date_naissance?: string;
   adresse?: string;
   // Pour les élèves
   numero_etudiant?: string;
   classe_id?: number;
-  classe?: Classe;
   // Pour les parents
   nom_parent?: string;
   prenom_parent?: string;
