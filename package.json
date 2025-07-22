@@ -26,6 +26,7 @@
     "@angular/platform-browser": "17.3.7",
     "@angular/platform-browser-dynamic": "17.3.7",
     "@angular/router": "17.3.7",
+    "@ant-design/icons": "5.x",
     "@ant-design/icons-angular": "^17.0.0",
     "@ng-bootstrap/ng-bootstrap": "16.1.1",
     "@popperjs/core": "2.11.8",
