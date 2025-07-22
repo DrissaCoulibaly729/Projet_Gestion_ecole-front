@@ -1,0 +1,484 @@
+/* ===================================================================
+   Dashboard Administratif - Portail Scolaire
+   Styles personnalisés pour l'environnement éducatif
+   =================================================================== */
+
+// Variables couleurs spécifiques au portail scolaire
+$scolaire-primary: #2c5aa0;     // Bleu académique
+$scolaire-secondary: #f39c12;   // Orange éducatif
+$scolaire-success: #27ae60;     // Vert réussite
+$scolaire-warning: #e74c3c;     // Rouge attention
+$scolaire-info: #3498db;        // Bleu information
+
+// Gradients personnalisés
+$gradient-users: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+$gradient-classes: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+$gradient-subjects: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+$gradient-notes: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+
+// ===================================================================
+// Header personnalisé pour le portail scolaire
+// ===================================================================
+.page-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 15px;
+  margin-bottom: 2rem;
+  box-shadow: 0 8px 30px rgba(102, 126, 234, 0.3);
+  
+  .page-header-title {
+    h2 {
+      color: white;
+      font-weight: 700;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      
+      &::before {
+        background: rgba(255, 255, 255, 0.3);
+        width: 5px;
+        height: 2rem;
+      }
+    }
+  }
+}
+
+// ===================================================================
+// Cards statistiques personnalisées
+// ===================================================================
+.social-widget-card {
+  border: none;
+  border-radius: 20px;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  position: relative;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--card-accent, #667eea);
+    z-index: 1;
+  }
+  
+  &:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  }
+  
+  // Card Utilisateurs
+  &.card-users {
+    --card-accent: #{$scolaire-primary};
+    background: $gradient-users;
+    color: white;
+    
+    .card-body-big {
+      background: transparent;
+      
+      h3, .text-muted {
+        color: white;
+      }
+      
+      .text-muted {
+        opacity: 0.9;
+      }
+    }
+  }
+  
+  // Card Classes
+  &.card-classes {
+    --card-accent: #{$scolaire-warning};
+    background: $gradient-classes;
+    color: white;
+    
+    .card-body-big {
+      background: transparent;
+      
+      h3, .text-muted {
+        color: white;
+      }
+    }
+  }
+  
+  // Card Matières
+  &.card-subjects {
+    --card-accent: #{$scolaire-info};
+    background: $gradient-subjects;
+    color: white;
+    
+    .card-body-big {
+      background: transparent;
+      
+      h3, .text-muted {
+        color: white;
+      }
+    }
+  }
+  
+  // Card Notes
+  &.card-notes {
+    --card-accent: #{$scolaire-success};
+    background: $gradient-notes;
+    color: white;
+    
+    .card-body-big {
+      background: transparent;
+      
+      h3, .text-muted {
+        color: white;
+      }
+    }
+  }
+  
+  .card-body-big {
+    padding: 2.5rem 2rem;
+    position: relative;
+    
+    h3 {
+      font-size: 3rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+      letter-spacing: -1px;
+    }
+    
+    .text-muted {
+      font-size: 0.95rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    .social-widget-card-icon {
+      position: absolute;
+      top: 2rem;
+      right: 2rem;
+      opacity: 0.15;
+      font-size: 4rem;
+      
+      i {
+        font-size: 4rem;
+      }
+    }
+  }
+}
+
+// ===================================================================
+// Section répartition utilisateurs
+// ===================================================================
+.card-repartition {
+  border-radius: 15px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+  
+  .card-header {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-bottom: none;
+    border-radius: 15px 15px 0 0;
+    
+    h5 {
+      color: $scolaire-primary;
+      font-weight: 700;
+    }
+  }
+  
+  .role-item {
+    padding: 1.5rem 0;
+    transition: all 0.3s ease;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+    
+    &:hover {
+      background: rgba(102, 126, 234, 0.05);
+      transform: translateX(5px);
+    }
+    
+    .avtar {
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
+      
+      &:hover {
+        transform: scale(1.1);
+      }
+      
+      &.bg-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      }
+      
+      &.bg-success {
+        background: linear-gradient(135deg, #56ab2f 0%, #a8e6cf 100%);
+      }
+      
+      &.bg-warning {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      }
+    }
+    
+    h6 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: $scolaire-primary;
+    }
+    
+    small {
+      font-weight: 500;
+      color: #6c757d;
+    }
+  }
+}
+
+// ===================================================================
+// Section utilisateur connecté
+// ===================================================================
+.card-user-profile {
+  border-radius: 15px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+  
+  .card-header {
+    background: transparent;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    
+    h5 {
+      color: white;
+      font-weight: 600;
+    }
+  }
+  
+  .avtar-xl {
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  }
+  
+  h6 {
+    color: white;
+    font-weight: 600;
+  }
+  
+  small {
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: 500;
+  }
+  
+  .badge {
+    background: rgba(255, 255, 255, 0.2) !important;
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+}
+
+// ===================================================================
+// Actions rapides
+// ===================================================================
+.card-actions {
+  border-radius: 15px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+  
+  .card-header {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 15px 15px 0 0;
+    
+    h5 {
+      color: $scolaire-primary;
+      font-weight: 700;
+    }
+  }
+  
+  .btn {
+    border-radius: 12px;
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    border: none;
+    position: relative;
+    overflow: hidden;
+    
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s;
+    }
+    
+    &:hover::before {
+      left: 100%;
+    }
+    
+    &:hover {
+      transform: translateY(-3px);
+    }
+    
+    &.btn-primary {
+      background: linear-gradient(135deg, $scolaire-primary 0%, #3d72c4 100%);
+      box-shadow: 0 4px 15px rgba(44, 90, 160, 0.3);
+      
+      &:hover {
+        box-shadow: 0 8px 25px rgba(44, 90, 160, 0.4);
+      }
+    }
+    
+    &.btn-success {
+      background: linear-gradient(135deg, $scolaire-success 0%, #2ecc71 100%);
+      box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3);
+      
+      &:hover {
+        box-shadow: 0 8px 25px rgba(39, 174, 96, 0.4);
+      }
+    }
+    
+    &.btn-warning {
+      background: linear-gradient(135deg, $scolaire-secondary 0%, #f1c40f 100%);
+      box-shadow: 0 4px 15px rgba(243, 156, 18, 0.3);
+      
+      &:hover {
+        box-shadow: 0 8px 25px rgba(243, 156, 18, 0.4);
+      }
+    }
+    
+    &.btn-info {
+      background: linear-gradient(135deg, $scolaire-info 0%, #5dade2 100%);
+      box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+      
+      &:hover {
+        box-shadow: 0 8px 25px rgba(52, 152, 219, 0.4);
+      }
+    }
+    
+    i {
+      margin-right: 0.5rem;
+      font-size: 1.1rem;
+    }
+  }
+}
+
+// ===================================================================
+// États de chargement et erreur
+// ===================================================================
+.loading-card, .error-card, .demo-card {
+  border-radius: 15px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+  
+  .spinner-border {
+    width: 3rem;
+    height: 3rem;
+    border-width: 0.3em;
+    color: $scolaire-primary;
+  }
+  
+  .alert {
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+    border-left: 5px solid $scolaire-secondary;
+    
+    h5 {
+      color: $scolaire-primary;
+      font-weight: 700;
+    }
+  }
+}
+
+// ===================================================================
+// Animations et transitions
+// ===================================================================
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.row > [class*="col-"] {
+  animation: fadeInUp 0.6s ease-out;
+  
+  &:nth-child(1) { animation-delay: 0.1s; }
+  &:nth-child(2) { animation-delay: 0.2s; }
+  &:nth-child(3) { animation-delay: 0.3s; }
+  &:nth-child(4) { animation-delay: 0.4s; }
+}
+
+.social-widget-card:hover .social-widget-card-icon {
+  animation: pulse 2s infinite;
+}
+
+// ===================================================================
+// Design responsive
+// ===================================================================
+@media (max-width: 768px) {
+  .page-header {
+    margin-bottom: 1.5rem;
+    
+    .page-header-title h2 {
+      font-size: 1.5rem;
+    }
+  }
+  
+  .social-widget-card {
+    margin-bottom: 1.5rem;
+    
+    .card-body-big {
+      padding: 2rem 1.5rem;
+      
+      h3 {
+        font-size: 2.5rem;
+      }
+      
+      .social-widget-card-icon {
+        top: 1.5rem;
+        right: 1.5rem;
+        font-size: 3rem;
+        
+        i {
+          font-size: 3rem;
+        }
+      }
+    }
+  }
+  
+  .btn {
+    margin-bottom: 1rem;
+  }
+}
+
+// ===================================================================
+// Mode sombre (optionnel)
+// ===================================================================
+@media (prefers-color-scheme: dark) {
+  .card:not(.social-widget-card):not(.card-user-profile) {
+    background-color: #2d3748;
+    color: #e2e8f0;
+    
+    .card-header {
+      background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+      border-bottom-color: #4a5568;
+      
+      h5 {
+        color: #e2e8f0;
+      }
+    }
+  }
+  
+  .page-header:not(.page-header) {
+    border-bottom-color: #4a5568;
+  }
+}

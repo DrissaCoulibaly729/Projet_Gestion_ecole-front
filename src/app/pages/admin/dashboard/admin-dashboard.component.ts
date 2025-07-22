@@ -38,7 +38,7 @@ interface DashboardStats {
   standalone: true,
   imports: [CommonModule],
   template: `
-    <!-- Template Mantis pour Dashboard Admin -->
+    <!-- Template utilisant les styles personnalisés du portail scolaire -->
     <div class="pc-container">
       <div class="pc-content">
         <!-- [ breadcrumb ] start -->
@@ -47,7 +47,7 @@ interface DashboardStats {
             <div class="row align-items-center">
               <div class="col-md-12">
                 <div class="page-header-title">
-                  <h2 class="mb-0">🎨 Dashboard Administrateur</h2>
+                  <h2 class="mb-0">🎓 Dashboard Administrateur - Portail Scolaire</h2>
                 </div>
               </div>
             </div>
@@ -57,50 +57,50 @@ interface DashboardStats {
 
         <!-- [ Main Content ] start -->
         <div class="row">
-          <!-- Statistiques Cards Mantis -->
+          <!-- Statistiques Cards personnalisées -->
           <div class="col-md-6 col-xl-3">
-            <div class="card social-widget-card">
+            <div class="card social-widget-card card-users">
               <div class="card-body-big">
-                <h3>👥 {{ stats?.utilisateurs?.total || 0 }}</h3>
-                <span class="text-muted">Total des comptes</span>
+                <h3>{{ stats?.utilisateurs?.total || 0 }}</h3>
+                <span class="text-muted">👥 Total des comptes</span>
                 <div class="social-widget-card-icon">
-                  <i class="feather icon-users text-primary"></i>
+                  <i class="feather icon-users"></i>
                 </div>
               </div>
             </div>
           </div>
           
           <div class="col-md-6 col-xl-3">
-            <div class="card social-widget-card">
+            <div class="card social-widget-card card-classes">
               <div class="card-body-big">
-                <h3>🏫 {{ stats?.classes?.total || 0 }}</h3>
-                <span class="text-muted">Classes actives</span>
+                <h3>{{ stats?.classes?.total || 0 }}</h3>
+                <span class="text-muted">🏫 Classes actives</span>
                 <div class="social-widget-card-icon">
-                  <i class="feather icon-home text-success"></i>
+                  <i class="feather icon-home"></i>
                 </div>
               </div>
             </div>
           </div>
           
           <div class="col-md-6 col-xl-3">
-            <div class="card social-widget-card">
+            <div class="card social-widget-card card-subjects">
               <div class="card-body-big">
-                <h3>📚 {{ stats?.matieres?.total || 0 }}</h3>
-                <span class="text-muted">Matières enseignées</span>
+                <h3>{{ stats?.matieres?.total || 0 }}</h3>
+                <span class="text-muted">📚 Matières enseignées</span>
                 <div class="social-widget-card-icon">
-                  <i class="feather icon-book text-warning"></i>
+                  <i class="feather icon-book"></i>
                 </div>
               </div>
             </div>
           </div>
           
           <div class="col-md-6 col-xl-3">
-            <div class="card social-widget-card">
+            <div class="card social-widget-card card-notes">
               <div class="card-body-big">
-                <h3>📊 {{ stats?.matieres?.notes_saisies || 0 }}</h3>
-                <span class="text-muted">Notes saisies</span>
+                <h3>{{ stats?.matieres?.notes_saisies || 0 }}</h3>
+                <span class="text-muted">📊 Notes saisies</span>
                 <div class="social-widget-card-icon">
-                  <i class="feather icon-bar-chart text-info"></i>
+                  <i class="feather icon-bar-chart"></i>
                 </div>
               </div>
             </div>
@@ -110,14 +110,14 @@ interface DashboardStats {
         <!-- Détails par rôle -->
         <div class="row" *ngIf="stats">
           <div class="col-md-8">
-            <div class="card">
+            <div class="card card-repartition">
               <div class="card-header">
-                <h5>📈 Répartition des Utilisateurs</h5>
+                <h5>📊 Répartition des Utilisateurs</h5>
               </div>
               <div class="card-body">
                 <div class="row">
                   <div class="col-md-4">
-                    <div class="d-flex align-items-center">
+                    <div class="d-flex align-items-center role-item">
                       <div class="avtar avtar-s bg-primary">
                         <i class="feather icon-shield text-white"></i>
                       </div>
@@ -128,7 +128,7 @@ interface DashboardStats {
                     </div>
                   </div>
                   <div class="col-md-4">
-                    <div class="d-flex align-items-center">
+                    <div class="d-flex align-items-center role-item">
                       <div class="avtar avtar-s bg-success">
                         <i class="feather icon-user-check text-white"></i>
                       </div>
@@ -139,7 +139,7 @@ interface DashboardStats {
                     </div>
                   </div>
                   <div class="col-md-4">
-                    <div class="d-flex align-items-center">
+                    <div class="d-flex align-items-center role-item">
                       <div class="avtar avtar-s bg-warning">
                         <i class="feather icon-users text-white"></i>
                       </div>
@@ -155,7 +155,7 @@ interface DashboardStats {
           </div>
           
           <div class="col-md-4">
-            <div class="card">
+            <div class="card card-user-profile">
               <div class="card-header">
                 <h5>👋 Bienvenue, {{ currentUser?.prenom }}</h5>
               </div>
@@ -180,7 +180,7 @@ interface DashboardStats {
         <!-- Actions rapides -->
         <div class="row">
           <div class="col-md-12">
-            <div class="card">
+            <div class="card card-actions">
               <div class="card-header">
                 <h5>⚡ Actions Rapides</h5>
               </div>
@@ -188,25 +188,25 @@ interface DashboardStats {
                 <div class="row">
                   <div class="col-md-3">
                     <button class="btn btn-primary btn-sm w-100 mb-2" (click)="navigateTo('/admin/utilisateurs')">
-                      <i class="feather icon-users me-2"></i>
+                      <i class="feather icon-users"></i>
                       Gérer Utilisateurs
                     </button>
                   </div>
                   <div class="col-md-3">
                     <button class="btn btn-success btn-sm w-100 mb-2" (click)="navigateTo('/admin/classes')">
-                      <i class="feather icon-home me-2"></i>
+                      <i class="feather icon-home"></i>
                       Gérer Classes
                     </button>
                   </div>
                   <div class="col-md-3">
                     <button class="btn btn-warning btn-sm w-100 mb-2" (click)="navigateTo('/admin/matieres')">
-                      <i class="feather icon-book me-2"></i>
+                      <i class="feather icon-book"></i>
                       Gérer Matières
                     </button>
                   </div>
                   <div class="col-md-3">
                     <button class="btn btn-info btn-sm w-100 mb-2" (click)="refreshData()">
-                      <i class="feather icon-refresh-cw me-2"></i>
+                      <i class="feather icon-refresh-cw"></i>
                       Actualiser
                     </button>
                   </div>
@@ -219,12 +219,12 @@ interface DashboardStats {
         <!-- Chargement -->
         <div class="row" *ngIf="loading">
           <div class="col-12">
-            <div class="card">
+            <div class="card loading-card">
               <div class="card-body text-center">
                 <div class="spinner-border text-primary" role="status">
                   <span class="visually-hidden">Chargement...</span>
                 </div>
-                <p class="mt-3">Chargement des statistiques...</p>
+                <p class="mt-3">🔄 Chargement des statistiques du portail...</p>
               </div>
             </div>
           </div>
@@ -233,12 +233,12 @@ interface DashboardStats {
         <!-- Erreur -->
         <div class="row" *ngIf="error">
           <div class="col-12">
-            <div class="card">
+            <div class="card error-card">
               <div class="card-body">
                 <div class="alert alert-warning">
-                  <h5>⚠️ Données de démonstration</h5>
+                  <h5>📡 Mode Démonstration</h5>
                   <p>{{ error }}</p>
-                  <small class="text-muted">Les statistiques réelles seront affichées une fois l'API connectée.</small>
+                  <small class="text-muted">🎓 Les statistiques réelles du portail scolaire seront affichées une fois l'API connectée.</small>
                 </div>
               </div>
             </div>
@@ -248,11 +248,12 @@ interface DashboardStats {
         <!-- Mode démo -->
         <div class="row" *ngIf="!stats && !loading">
           <div class="col-12">
-            <div class="card">
+            <div class="card demo-card">
               <div class="card-body text-center">
-                <h5>🚀 Dashboard Opérationnel</h5>
-                <p class="text-muted">Le dashboard est prêt. Connectez votre API pour afficher les vraies données.</p>
+                <h5>🚀 Portail Scolaire Opérationnel</h5>
+                <p class="text-muted">📚 Le dashboard administratif est prêt. Connectez votre API pour afficher les vraies données scolaires.</p>
                 <button class="btn btn-primary" (click)="loadMockData()">
+                  <i class="feather icon-database me-2"></i>
                   Charger des données de test
                 </button>
               </div>
@@ -262,85 +263,8 @@ interface DashboardStats {
       </div>
     </div>
   `,
-  // ✅ CORRECTION: Supprimer styleUrls et utiliser styles: []
-  styles: [`
-    /* Styles inline pour éviter les erreurs de fichier SCSS manquant */
-    .social-widget-card {
-      border: none;
-      border-radius: 12px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-      transition: all 0.3s ease;
-    }
-    
-    .social-widget-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
-    }
-    
-    .card-body-big {
-      padding: 2rem;
-      position: relative;
-    }
-    
-    .card-body-big h3 {
-      font-size: 2.5rem;
-      font-weight: 700;
-      margin-bottom: 0.5rem;
-      color: #343a40;
-    }
-    
-    .social-widget-card-icon {
-      position: absolute;
-      top: 1.5rem;
-      right: 1.5rem;
-      opacity: 0.1;
-      font-size: 3rem;
-    }
-    
-    .page-header {
-      margin-bottom: 2rem;
-      padding-bottom: 1rem;
-      border-bottom: 1px solid #e9ecef;
-    }
-    
-    .page-header-title h2::before {
-      content: "";
-      display: inline-block;
-      width: 4px;
-      height: 1.5rem;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      margin-right: 0.75rem;
-      border-radius: 2px;
-      vertical-align: middle;
-    }
-    
-    .avtar {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1rem;
-      font-weight: 500;
-    }
-    
-    .avtar-s {
-      width: 32px;
-      height: 32px;
-    }
-    
-    .avtar-xl {
-      width: 60px;
-      height: 60px;
-    }
-    
-    .avtar-img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-  `]
+  // ✅ CORRECT: Utiliser styleUrls avec un fichier SCSS minimal
+  styleUrls: ['./admin-dashboard.component.scss']
 })
 export class AdminDashboardComponent implements OnInit, OnDestroy {
   // Propriétés
@@ -357,7 +281,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    console.log('🎨 AdminDashboardComponent - Initialisation');
+    console.log('🎨 AdminDashboardComponent - Initialisation avec thème Mantis');
     
     // Récupérer l'utilisateur connecté
     this.authService.currentUser$
