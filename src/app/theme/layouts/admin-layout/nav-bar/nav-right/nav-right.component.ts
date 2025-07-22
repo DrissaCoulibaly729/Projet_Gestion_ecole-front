@@ -31,7 +31,7 @@ import { NgScrollbarModule } from 'ngx-scrollbar';
 @Component({
   standalone: true,
   selector: 'app-nav-right',
-  imports: [IconDirective, RouterModule, NgScrollbarModule, NgbNavModule, NgbDropdownModule],
+  imports: [  RouterModule, NgScrollbarModule, NgbNavModule, NgbDropdownModule],
   templateUrl: './nav-right.component.html',
   styleUrls: ['./nav-right.component.scss']
 })
